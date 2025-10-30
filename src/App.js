@@ -86,9 +86,6 @@ function App() {
   const warningCount = storeIntelligence.filter(s => s.urgency === 'warning').length;
   const goodCount = storeIntelligence.filter(s => s.urgency === 'good').length;
 
-  const totalRevenue = storeIntelligence.reduce((sum, s) => sum + s.totalRevenue, 0);
-  const totalCommission = totalRevenue * 0.08;
-
   if (selectedStore) {
     return <StoreDetailPage store={selectedStore} onBack={() => setSelectedStore(null)} />;
   }
@@ -211,11 +208,6 @@ function App() {
                 <div className="stat-label">✅ Good - On Schedule</div>
                 <div className="stat-value">{goodCount}</div>
                 <div className="stat-sublabel">Not due yet</div>
-              </div>
-              <div className="stat-card blue">
-                <div className="stat-label">💰 Total Commission</div>
-                <div className="stat-value">${(totalCommission / 1000).toFixed(1)}K</div>
-                <div className="stat-sublabel">${(totalRevenue / 1000).toFixed(1)}K revenue • 8%</div>
               </div>
             </div>
 
@@ -630,7 +622,6 @@ function StoreDetailPage({ store, onBack }) {
     ? ((store.strainTypeBreakdown.hybrid / totalStrainRevenue) * 100).toFixed(1)
     : 0;
 
-  const commission = store.totalRevenue * 0.08;
   const avgOrder = store.orderCount > 0 ? store.totalRevenue / store.orderCount : 0;
 
   return (
@@ -748,7 +739,7 @@ function StoreDetailPage({ store, onBack }) {
           </div>
         )}
 
-        {/* Revenue & Commission Stats */}
+        {/* Store Stats */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -759,7 +750,7 @@ function StoreDetailPage({ store, onBack }) {
             icon="💰"
             label="Total Revenue"
             value={`$${store.totalRevenue.toLocaleString()}`}
-            sublabel={`Commission: $${commission.toFixed(2)}`}
+            sublabel={`${store.orderCount} orders total`}
           />
           <StatCard 
             icon="📦"
